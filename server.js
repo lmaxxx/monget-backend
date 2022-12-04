@@ -12,7 +12,7 @@ const categoryRouter = require("./routes/categoryRoute")
 const transactionRouter = require("./routes/transactionRouter")
 const statisticRouter = require("./routes/statisticRouter")
 
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
+app.use(cors({credentials: true, origin: process.env.CLIENT_URL}))
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(cookieParser())
