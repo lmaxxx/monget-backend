@@ -4,6 +4,7 @@ const ApiError = require("../exceptions/apiError");
 class CategoryController {
   async getCategories(req, res) {
     try {
+      console.log(req.url, typeof req.url)
       const transactionType = req.url.split("/").at(-1)
       const {id} = req.user
       const categories = await CategoryService.getCategories(transactionType, id)
