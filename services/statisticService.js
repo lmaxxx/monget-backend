@@ -4,25 +4,26 @@ const ApiError = require("../exceptions/apiError");
 const ConverterService = require("./converterService")
 
 class StatisticService {
-  async getStatistics(queryType, dateCounter, transactionType) {
+  async getStatistics(queryType, dateCounter, transactionType, ownerId) {
     switch (queryType) {
       case "years":
-        return await this.getYearStatistic(dateCounter, transactionType)
+        return await this.getYearStatistic(dateCounter, transactionType, ownerId)
       case "weeks":
-        return await this.getWeekStatistic(dateCounter, transactionType)
+        return await this.getWeekStatistic(dateCounter, transactionType, ownerId)
       case "months":
-        return await this.getMonthStatistic(dateCounter, transactionType)
+        return await this.getMonthStatistic(dateCounter, transactionType, ownerId)
     }
   }
 
-  async getYearStatistic(dateCounter, transactionType) {
+  async getYearStatistic(dateCounter, transactionType, ownerId) {
     const data = []
     const currentDate = new Date()
     const startOfTheYear = DateService.getStartOfTheYear(currentDate, dateCounter)
     const endOfTheYear = DateService.getEndOfTheYear(currentDate, dateCounter)
     const query = {
       start: startOfTheYear,
-      end: endOfTheYear
+      end: endOfTheYear,
+      ownerId
     }
 
     let transactions = await TransactionService.getTransactions(null, transactionType, query)
@@ -45,7 +46,7 @@ class StatisticService {
     return data
   }
 
-  async getMonthStatistic(dateCounter, transactionType) {
+  async getMonthStatistic(dateCounter, transactionType, ownerId) {
     const data = []
     const currentDate = new Date()
     const monthStartDay = DateService.subtractMonths(currentDate, dateCounter)
@@ -55,6 +56,7 @@ class StatisticService {
     const query = {
       start: DateService.getStartOfTheDay(monthStartDay),
       end: DateService.getEndOfTheDay(monthEndDay),
+      ownerId
     }
 
     let transactions = await TransactionService.getTransactions(null, transactionType, query)
@@ -83,7 +85,7 @@ class StatisticService {
     return data
   }
 
-  async getWeekStatistic(dateCounter, transactionType) {
+  async getWeekStatistic(dateCounter, transactionType, ownerId) {
     const data = []
     const currentDate = new Date()
     const weekStartDay = DateService.subtractDays(currentDate, dateCounter * 7)
@@ -92,6 +94,7 @@ class StatisticService {
     const query = {
       start: DateService.getStartOfTheDay(weekStartDay),
       end: DateService.getEndOfTheDay(weekEndDay),
+      ownerId
     }
 
     let transactions = await TransactionService.getTransactions(null, transactionType, query)

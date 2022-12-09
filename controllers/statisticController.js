@@ -4,8 +4,9 @@ const StatisticService = require('../services/statisticService')
 class StatisticController {
   async getIncomeStatistics(req, res) {
     try {
+      const {id: ownerId} = req.user
       const query = StatisticService.getStatisticsQuery(req.query)
-      const data = await StatisticService.getStatistics(query.type, query.dateCounter, "income")
+      const data = await StatisticService.getStatistics(query.type, query.dateCounter, "income", ownerId)
 
       res.json(data)
     } catch (err) {
@@ -15,8 +16,9 @@ class StatisticController {
 
   async getExpensesStatistics(req, res) {
     try {
+      const {id: ownerId} = req.user
       const query = StatisticService.getStatisticsQuery(req.query)
-      const data = await StatisticService.getStatistics(query.type, query.dateCounter, "expenses")
+      const data = await StatisticService.getStatistics(query.type, query.dateCounter, "expenses", ownerId)
 
       res.json(data)
     } catch (err) {
@@ -26,8 +28,9 @@ class StatisticController {
 
   async getStatistics(req, res) {
     try {
+      const {id: ownerId} = req.user
       const query = StatisticService.getStatisticsQuery(req.query)
-      const data = await StatisticService.getStatistics(query.type, query.dateCounter)
+      const data = await StatisticService.getStatistics(query.type, query.dateCounter, null, ownerId)
 
       res.json(data)
     } catch (err) {

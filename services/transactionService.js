@@ -9,16 +9,11 @@ const AccountService = require("./accountService");
 
 class TransactionService {
   async getTransactions(accountId, transactionType, query, options) {
-    const findQuery = {}
+    let findQuery = {}
 
     if (transactionType) findQuery.transactionType = transactionType
     if (accountId) findQuery.accountId = accountId
-    if (query) {
-      const {start, end, categoryId} = query
-
-      if (start && end) findQuery.date = {$gte: start, $lte: end}
-      if (categoryId) findQuery.categoryId = categoryId
-    }
+    if (query) findQuery = {...findQuery, ...query}
 
     const transactionsDocs = await Transaction.find(findQuery, null, options).sort({createdAt: "desc"})
       .catch(err => {
@@ -189,6 +184,7 @@ class TransactionService {
   }
 
   async getChartData(accountId, transactionType, userId, query) {
+    query.ownerId = userId
     const chartData = []
     const categories = await CategoryService.getCategories(transactionType, userId)
     const transactions = await this.getTransactions(accountId, transactionType, query)

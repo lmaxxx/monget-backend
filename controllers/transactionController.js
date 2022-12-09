@@ -5,12 +5,14 @@ const ApiError = require("../exceptions/apiError");
 class TransactionController {
   async getTransactions(req, res) {
     try {
+      const {id: ownerId} = req.user
       const {accountId} = req.params
       const {categoryId} = req.query
       const validatedQuery = TransactionService.validateDateTransactionQuery(req.query)
       const options = DataService.validatePageTransactionQuery(req.query)
 
       if (categoryId) validatedQuery.categoryId = categoryId
+      validatedQuery.ownerId = ownerId
 
       const transactions = await TransactionService.getTransactions(accountId, null, validatedQuery, options)
 
@@ -22,12 +24,14 @@ class TransactionController {
 
   async getExpensesTransactions(req, res) {
     try {
+      const {id: ownerId} = req.user
       const {accountId} = req.params
       const {categoryId} = req.query
       const validatedQuery = TransactionService.validateDateTransactionQuery(req.query)
       const options = DataService.validatePageTransactionQuery(req.query)
 
       if (categoryId) validatedQuery.categoryId = categoryId
+      validatedQuery.ownerId = ownerId
 
       const transactions = await TransactionService.getTransactions(accountId, "expenses", validatedQuery, options)
 
@@ -39,12 +43,14 @@ class TransactionController {
 
   async getIncomeTransactions(req, res) {
     try {
+      const {id: ownerId} = req.user
       const {accountId} = req.params
       const {categoryId} = req.query
       const validatedQuery = TransactionService.validateDateTransactionQuery(req.query)
       const options = DataService.validatePageTransactionQuery(req.query)
 
       if (categoryId) validatedQuery.categoryId = categoryId
+      validatedQuery.ownerId = ownerId
 
       const transactions = await TransactionService.getTransactions(accountId, "income", validatedQuery, options)
 
